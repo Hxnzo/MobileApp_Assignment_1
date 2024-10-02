@@ -30,34 +30,41 @@ public class MainActivity extends AppCompatActivity
             return insets;
         });
 
+        // Get Button and TextView ID's
         Button calculateBtn = findViewById(R.id.btnCalculate);
 
         TextInputEditText mortgageAmountET = findViewById(R.id.mortgageAmount);
         TextInputEditText interestRateET = findViewById(R.id.interestRate);
         TextInputEditText mortgagePeriodET = findViewById(R.id.mortgagePeriod);
+        TextView errorTextView = findViewById(R.id.displayError);
 
+        // Set an onClickListener for when user presses calculateBtn
         calculateBtn.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View view)
             {
+                // Get the values that the user inputs
                 String mortgageAmountString = mortgageAmountET.getText().toString();
                 String interestRateString = interestRateET.getText().toString();
                 String mortgagePeriodString = mortgagePeriodET.getText().toString();
 
-                TextView errorTextView = findViewById(R.id.displayError);
-
+                // Make sure the input fields are not empty
                 if (!mortgageAmountString.isEmpty() && !interestRateString.isEmpty() && !mortgagePeriodString.isEmpty()) {
+                    // Get the values and convert the them to double
                     double mortgageAmount = Double.parseDouble(mortgageAmountString);
                     double interestRate = Double.parseDouble(interestRateString);
                     double monthlyInterestRate = interestRate / 12 / 100;
 
+                    // Get integer values
                     int mortgagePeriod = Integer.parseInt(mortgagePeriodString);
                     int numberOfMonthlyPayments = mortgagePeriod * 12;
 
+                    // Calculate EMI using inputs the user gave
                     double EMI = mortgageAmount * (monthlyInterestRate * Math.pow(1 + monthlyInterestRate, numberOfMonthlyPayments)) /
                             (Math.pow(1 + monthlyInterestRate, numberOfMonthlyPayments) - 1);
 
+                    // Redirect user to calculation_activity.java and send calculated EMI value to display to user
                     Intent calculationIntent = new Intent(MainActivity.this, calculation_activity.class);
                     calculationIntent.putExtra("emi", EMI);
 
@@ -65,6 +72,7 @@ public class MainActivity extends AppCompatActivity
                 }
                 else
                 {
+                    // Display error message if any field is left empty
                     errorTextView.setText("Please fill in all fields");
                 }
             }
